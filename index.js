@@ -16,11 +16,16 @@ async function run() {
     try {
         await client.connect()
         const mobileCollection = client.db("mobiles").collection("mobile");
+        const laptopCollection = client.db("laptops").collection("laptop");
 
         app.get('/mobiles', async (req, res) => {
             const query = {}
             const cursor = mobileCollection.find(query)
             const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/laptops', async (req, res) => {
+            const result = await laptopCollection.find().toArray()
             res.send(result)
         })
 
