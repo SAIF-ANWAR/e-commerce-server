@@ -32,6 +32,17 @@ async function run() {
             const result = await mobileCollection.findOne(query)
             res.send(result)
         })
+        app.put('/mobiles/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const quantity = req.body
+            const options = { upsert: true }
+            const updatedDoc = {
+                $set: quantity
+            }
+            const result = await mobileCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        })
         app.get('/laptops', async (req, res) => {
             const result = await laptopCollection.find().toArray()
             res.send(result)
@@ -40,6 +51,17 @@ async function run() {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await laptopCollection.findOne(query)
+            res.send(result)
+        })
+        app.put('/laptops/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const quantity = req.body
+            const options = { upsert: true }
+            const updatedDoc = {
+                $set: quantity
+            }
+            const result = await laptopCollection.updateOne(filter, updatedDoc, options)
             res.send(result)
         })
         app.post('/phoneOrders', async (req, res) => {
