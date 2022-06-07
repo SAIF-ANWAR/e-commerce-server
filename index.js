@@ -17,7 +17,8 @@ async function run() {
         await client.connect()
         const mobileCollection = client.db("mobiles").collection("mobile");
         const laptopCollection = client.db("laptops").collection("laptop");
-        const phoneOrdersCollection = client.db("orders").collection("laptopOrders");
+        const laptopOrdersCollection = client.db("orders").collection("laptopOrders");
+        const phoneOrdersCollection = client.db("orders").collection("phoneOrders");
 
         app.get('/mobiles', async (req, res) => {
             const query = {}
@@ -48,7 +49,7 @@ async function run() {
         })
         app.post('/laptopOrders', async (req, res) => {
             const query = req.body
-            const result = await phoneOrdersCollection.insertOne(query)
+            const result = await laptopOrdersCollection.insertOne(query)
             res.send(result)
         })
 
