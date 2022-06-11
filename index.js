@@ -20,6 +20,7 @@ async function run() {
         const laptopOrdersCollection = client.db("orders").collection("laptopOrders");
         const phoneOrdersCollection = client.db("orders").collection("phoneOrders");
         const usersCollection = client.db("users").collection("user");
+        const reviewCollection = client.db("reviews").collection("review");
 
         app.get('/mobiles', async (req, res) => {
             const query = {}
@@ -101,6 +102,15 @@ async function run() {
             const email = req.params.email
             const filter = { email: email }
             const result = await usersCollection.findOne(filter)
+            res.send(result)
+        })
+        app.post('/reviews', async (req, res) => {
+            const query = req.body
+            const result = await reviewCollection.insertOne(query)
+            res.send(result)
+        })
+        app.get('/reviews', async (req, res) => {
+            const result = await reviewCollection.find().toArray()
             res.send(result)
         })
 
