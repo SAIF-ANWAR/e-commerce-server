@@ -69,6 +69,12 @@ async function run() {
             const result = await phoneOrdersCollection.insertOne(query)
             res.send(result)
         })
+        app.get('/phoneOrders/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const result = await phoneOrdersCollection.find(filter).toArray()
+            res.send(result)
+        })
         app.post('/laptopOrders', async (req, res) => {
             const query = req.body
             const result = await laptopOrdersCollection.insertOne(query)
