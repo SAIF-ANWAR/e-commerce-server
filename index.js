@@ -19,6 +19,7 @@ async function run() {
         const laptopCollection = client.db("laptops").collection("laptop");
         const laptopOrdersCollection = client.db("orders").collection("laptopOrders");
         const phoneOrdersCollection = client.db("orders").collection("phoneOrders");
+        const usersCollection = client.db("users").collection("user");
 
         app.get('/mobiles', async (req, res) => {
             const query = {}
@@ -78,6 +79,28 @@ async function run() {
         app.post('/laptopOrders', async (req, res) => {
             const query = req.body
             const result = await laptopOrdersCollection.insertOne(query)
+            res.send(result)
+        })
+        // app.put('/users', async (req, res) => {
+        //     const query = req.body
+        //     const result = await usersCollection.updateOne(query)
+        //     res.send(result)
+        // })
+        app.put('/users/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const data = req.body
+            const options = { upsert: true }
+            const updatedDoc = {
+                $set: data
+            }
+            const result = await usersCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        })
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const result = await usersCollection.findOne(filter)
             res.send(result)
         })
 
