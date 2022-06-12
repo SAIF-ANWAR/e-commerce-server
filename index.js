@@ -108,7 +108,7 @@ async function run() {
             const email = req.params.email
             const filter = { email: email }
             const data = req.body
-            const options = { upsert: true }
+            // const options = { upsert: true }
             const updatedDoc = {
                 $set: data
             }
