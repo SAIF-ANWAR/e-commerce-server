@@ -35,6 +35,13 @@ async function run() {
             const result = await mobileCollection.findOne(query)
             res.send(result)
         })
+        app.delete('/mobiles/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await mobileCollection.deleteOne(query)
+            res.send(result)
+        })
+
         app.put('/mobiles/:id', async (req, res) => {
             const id = req.params.id
             const filter = { _id: ObjectId(id) }
