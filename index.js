@@ -20,6 +20,7 @@ async function run() {
         const laptopOrdersCollection = client.db("orders").collection("laptopOrders");
         const phoneOrdersCollection = client.db("orders").collection("phoneOrders");
         const usersCollection = client.db("users").collection("user");
+        const allUsersCollection = client.db("users").collection("allUsers")
         const reviewCollection = client.db("reviews").collection("review");
 
         app.get('/mobiles', async (req, res) => {
@@ -87,6 +88,22 @@ async function run() {
         //     const result = await usersCollection.updateOne(query)
         //     res.send(result)
         // })
+        // app.get('/admin/:email', async (req, res) => {
+        //     const email = req.params.email
+        //     const user = await usersCollection.findOne({ email: email })
+        //     const isAdmin = user.role === 'admin'
+        //     res.send({ admin: isAdmin })
+        // })
+        // app.put('/user/admin/:email', async (req, res) => {
+        //     const email = req.params.email
+        //     const filter = { email: email }
+        //     const updatedDoc = {
+        //         $set: { role: 'admin' }
+        //     }
+        //     const result = await usersCollection.updateOne(filter, updatedDoc)
+        //     res.send(result)
+
+        // })
         app.put('/users/:email', async (req, res) => {
             const email = req.params.email
             const filter = { email: email }
@@ -112,6 +129,16 @@ async function run() {
         app.get('/reviews', async (req, res) => {
             const result = await reviewCollection.find().toArray()
             res.send(result)
+        })
+        app.get('/allUsers', async (req, res) => {
+            const result = await usersCollection.find().toArray()
+            res.send(result)
+        })
+        app.get('/allUsers/:email', async (req, res) => {
+            const email = req.params.email
+            const user = usersCollection.findOne({ email: email })
+            const isAdmin = user.role === 'admin'
+            res.send({ admin: isAdmin })
         })
 
     } finally {
