@@ -75,7 +75,7 @@ async function run() {
             const updatedDoc = {
                 $set: data
             }
-            const result = await laptopCollection.updateOne(filter, updatedDoc, options)
+            const result = await phoneOrdersCollection.updateOne(filter, updatedDoc, options)
             res.send(result)
         })
         app.post('/phoneOrders', async (req, res) => {
