@@ -78,6 +78,16 @@ async function run() {
             const result = await phoneOrdersCollection.find(filter).toArray()
             res.send(result)
         })
+        app.delete('/phoneOrders/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const result = await phoneOrdersCollection.deleteOne(filter)
+            res.send(result)
+        })
+        app.get('/phoneOrders', async (req, res) => {
+            const result = await phoneOrdersCollection.find().toArray()
+            res.send(result)
+        })
         app.post('/laptopOrders', async (req, res) => {
             const query = req.body
             const result = await laptopOrdersCollection.insertOne(query)
