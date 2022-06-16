@@ -22,6 +22,8 @@ async function run() {
         const usersCollection = client.db("users").collection("user");
         const allUsersCollection = client.db("users").collection("allUsers")
         const reviewCollection = client.db("reviews").collection("review");
+
+
         /* All apis for mobile data */
 
         app.get('/mobiles', async (req, res) => {
@@ -59,6 +61,8 @@ async function run() {
             const result = await mobileCollection.updateOne(filter, updatedDoc, options)
             res.send(result)
         })
+
+        /* All apis for laptop data */
         app.get('/laptops', async (req, res) => {
             const result = await laptopCollection.find().toArray()
             res.send(result)
@@ -72,6 +76,12 @@ async function run() {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await laptopCollection.findOne(query)
+            res.send(result)
+        })
+        app.delete('/laptops/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await laptopCollection.deleteOne(query)
             res.send(result)
         })
         app.put('/laptops/:id', async (req, res) => {
