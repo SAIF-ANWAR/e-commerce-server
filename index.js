@@ -22,11 +22,17 @@ async function run() {
         const usersCollection = client.db("users").collection("user");
         const allUsersCollection = client.db("users").collection("allUsers")
         const reviewCollection = client.db("reviews").collection("review");
+        /* All apis for mobile data */
 
         app.get('/mobiles', async (req, res) => {
             const query = {}
             const cursor = mobileCollection.find(query)
             const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.post('/mobiles', async (req, res) => {
+            const query = req.body
+            const result = await mobileCollection.insertOne(query)
             res.send(result)
         })
         app.get('/mobiles/:id', async (req, res) => {
@@ -55,6 +61,11 @@ async function run() {
         })
         app.get('/laptops', async (req, res) => {
             const result = await laptopCollection.find().toArray()
+            res.send(result)
+        })
+        app.post('/laptops', async (req, res) => {
+            const query = req.body
+            const result = await laptopCollection.insertOne(query)
             res.send(result)
         })
         app.get('/laptops/:id', async (req, res) => {
