@@ -20,7 +20,7 @@ async function run() {
         const laptopOrdersCollection = client.db("orders").collection("laptopOrders");
         const phoneOrdersCollection = client.db("orders").collection("phoneOrders");
         const usersCollection = client.db("users").collection("user");
-        const allUsersCollection = client.db("users").collection("allUsers")
+        const registeredUserCollection = client.db("users").collection("registeredUser")
         const reviewCollection = client.db("reviews").collection("review");
 
 
@@ -132,27 +132,43 @@ async function run() {
             const result = await laptopOrdersCollection.insertOne(query)
             res.send(result)
         })
-        // app.put('/users', async (req, res) => {
-        //     const query = req.body
-        //     const result = await usersCollection.updateOne(query)
-        //     res.send(result)
-        // })
-        // app.get('/admin/:email', async (req, res) => {
-        //     const email = req.params.email
-        //     const user = await usersCollection.findOne({ email: email })
-        //     const isAdmin = user.role === 'admin'
-        //     res.send({ admin: isAdmin })
-        // })
-        // app.put('/user/admin/:email', async (req, res) => {
-        //     const email = req.params.email
-        //     const filter = { email: email }
-        //     const updatedDoc = {
-        //         $set: { role: 'admin' }
-        //     }
-        //     const result = await usersCollection.updateOne(filter, updatedDoc)
-        //     res.send(result)
 
-        // })
+        /* sending registered user to DB */
+        app.put('/user/registeredUser/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const data = req.body
+            const options = { upsert: true }
+            const updatedDoc = {
+                $set: data
+            }
+            const result = await registeredUserCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        })
+
+        /* fetching data for useAdmin hook */
+        app.get('/user/registeredUser/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const user = await registeredUserCollection.findOne(filter)
+            const isAdmin = user.role === 'admin'
+            if (isAdmin) {
+                res.send({ admin: isAdmin })
+            }
+            else {
+                res.send({ admin: false })
+            }
+            // const isAdmin = user.role === 'admin'
+            // res.send({ admin: isAdmin })
+        })
+        app.get('/user/allRegisteredUser/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            const user = await registeredUserCollection.findOne(filter)
+            res.send(user)
+        })
+
+        /* update customer profile */
         app.put('/users/:email', async (req, res) => {
             const email = req.params.email
             const filter = { email: email }
@@ -164,12 +180,16 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updatedDoc, options)
             res.send(result)
         })
+
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email
             const filter = { email: email }
             const result = await usersCollection.findOne(filter)
             res.send(result)
         })
+
+
+        /* Posting customer reviews */
         app.post('/reviews', async (req, res) => {
             const query = req.body
             const result = await reviewCollection.insertOne(query)
@@ -182,12 +202,6 @@ async function run() {
         app.get('/allUsers', async (req, res) => {
             const result = await usersCollection.find().toArray()
             res.send(result)
-        })
-        app.get('/allUsers/:email', async (req, res) => {
-            const email = req.params.email
-            const user = await usersCollection.findOne({ email: email })
-            const isAdmin = user.role === 'admin'
-            res.send({ admin: isAdmin })
         })
 
     } finally {
